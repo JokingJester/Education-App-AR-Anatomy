@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections;
 using UnityEngine.UI;
 using Amazon.S3;
@@ -23,6 +24,8 @@ public class AWSManager : MonoBehaviour
             return _instance;
         }
     }
+
+    public GameObject targetImg;
 
     public string S3Region = RegionEndpoint.USEast2.SystemName;
     private RegionEndpoint _S3Region
@@ -72,5 +75,39 @@ public class AWSManager : MonoBehaviour
                 Debug.LogWarning(responseObj.Exception);
             }
         });
+
+        DownloadBundle();
+    }
+
+    public void DownloadBundle()
+    {
+        StartCoroutine(BundleRoutine());
+    }
+
+    IEnumerator BundleRoutine()
+    {
+        string url = "https://educationappar.s3.us-east-2.amazonaws.com/horse";
+        using(UnityWebRequest request = UnityWebRequestAssetBundle.GetAssetBundle(url))
+        {
+            yield return request.SendWebRequest();
+
+            if(request.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError(request.error);
+            }
+            else
+            {
+                AssetBundle bundle = DownloadHandlerAssetBundle.GetContent(request);
+                GameObject horse = bundle.LoadAsset<GameObject>("horse");
+                horse = Instantiate(horse);
+                horse.transform.parent = targetImg.transform;
+                horse.transform.position = new Vector3(-0.0989f, 0.017f, -0.024f);
+                horse.transform.eulerAngles = new Vector3(0, 0, -90);
+                horse.transform.localScale = new Vector3(0.08f, 0.08f, 0.08f);
+                horse.transform.parent.gameObject.SetActive(true);
+                UIManager.Instance.anim = horse.transform.GetComponent<Animator>();
+                
+            }
+        }
     }
 }

@@ -11,11 +11,14 @@ public class CalloutLabel : MonoBehaviour
     {
         line.startWidth = 0.01f;
         line.endWidth = 0.01f;
+
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (targetObj == null)
+            return;
         line.enabled = UIManager.Instance.currentAnim == 1;
         line.SetPosition(0, this.transform.position);
         line.SetPosition(1, targetObj.transform.position);

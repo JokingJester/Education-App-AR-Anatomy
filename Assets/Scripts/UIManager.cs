@@ -33,6 +33,14 @@ public class UIManager : MonoBehaviour
         anim.SetInteger("NextAnim", currentAnim);
     }
 
+    public void Previous()
+    {
+        if (currentAnim == 0)
+            return;
+        currentAnim--;
+        anim.SetInteger("NextAnim", currentAnim);
+    }
+
     public void ToggleLabel()
     {
         if (currentAnim == 1)
@@ -47,12 +55,5 @@ public class UIManager : MonoBehaviour
     private void Update()
     {
         ToggleLabel();
-    }
-    public void Previous()
-    {
-        if (currentAnim == 0)
-            return;
-        currentAnim--;
-        anim.SetInteger("NextAnim", currentAnim);
     }
 }
